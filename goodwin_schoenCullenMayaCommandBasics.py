@@ -1,0 +1,35 @@
+import sys
+import maya.cmds as cmds
+
+cmds.select(all =True)
+cmds.delete()
+
+cmds.polySphere(n='Sphere')
+cmds.polyCube(n='Cube')
+cmds.move( 0, 0, 5 )
+cmds.polyCylinder(n='Cylinder')
+cmds.move( 0, 0, 10 )
+cmds.polyCone(n='Cone')
+cmds.move( 0, 0, 15 )
+cmds.polyTorus(n='Torus')
+cmds.move( 0, 0, 20 )
+cmds.polyPlane(n='Plane')
+cmds.move( 0, 0, 25 )
+#cmds.polyDisc(n='Disc')
+#cmds.move( 0, 0, 30 )
+cmds.polyPyramid(n='Pyramid')
+cmds.move( 0, 0, 30 )
+cmds.polyPlatonicSolid(n='Platonic')
+cmds.move( 0, 0, 35 )
+cmds.polyPrism(n='Prism')
+cmds.move( 0, 0, 40 )
+cmds.polyPipe(n='Pipe')
+cmds.move( 0, 0, 45 )
+cmds.polyHelix(n='Helix')
+cmds.move( 0, 0, 50 )
+#cmds.polyGear(n='Gear')
+#cmds.move( 0, 0, 60 )
+cmds.polyPrimitive(r=1, l=0.4036, pt=0, n='SoccerBall')
+cmds.move( 0, 0, 55 )
+
+
