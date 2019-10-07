@@ -27,10 +27,10 @@ def createControl(ctrlName, size, jointName, alignment):
     if CLR[0]=='C':
         mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
         mc.setAttr(ctrlName+'Shape.overrideColor',17)
-    elif CLR[0]=='C':
+    elif CLR[0]=='L':
         mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
         mc.setAttr(ctrlName+'Shape.overrideColor',6)
-    elif CLR[0]=='C':
+    elif CLR[0]=='R':
         mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
         mc.setAttr(ctrlName+'Shape.overrideColor',6)
     mc.setAttr(ctrlName+'.sx',size)
