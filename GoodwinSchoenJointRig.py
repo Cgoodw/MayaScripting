@@ -22,17 +22,15 @@ def jointCreator( name, pos, type, side):
 
 def createControl(ctrlName, size, jointName, alignment):
     mc.circle(n=ctrlName, nr=alignment)
-    CLR = ctrlName.split(' ')
+    CLR = ctrlName.split('_')
     print CLR
+    mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
     if CLR[0]=='C':
-        mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
         mc.setAttr(ctrlName+'Shape.overrideColor',17)
     elif CLR[0]=='L':
-        mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
         mc.setAttr(ctrlName+'Shape.overrideColor',6)
     elif CLR[0]=='R':
-        mc.setAttr(ctrlName+'Shape.overrideEnabled',1)
-        mc.setAttr(ctrlName+'Shape.overrideColor',6)
+        mc.setAttr(ctrlName+'Shape.overrideColor',13)
     mc.setAttr(ctrlName+'.sx',size)
     mc.setAttr(ctrlName+'.sy',size)
     mc.setAttr(ctrlName+'.sz',size)
@@ -47,27 +45,105 @@ def createControl(ctrlName, size, jointName, alignment):
         mc.setAttr(ctrlName+'.ry',0)
         mc.setAttr(ctrlName+'.rz',0)
         mc.parent(ctrlName,w=True)
-        mc.makeIdentity(apply=True,t=True,r=True,s=True)
+    mc.makeIdentity(apply=True,t=True,r=True,s=True)
 
 
 def createRigControl():
-    createControl('C_Master_CTRL',10,False,[0,1,0])
-    createControl('C_COG_CTRL',8,False,[0,1,0])
-    createControl('C_Chest_CTRL',8,False,[0,1,0])
-    createControl('C_Head_CTRL',8,False,[0,1,0])
-    createControl('R_Arm_CTRL',3,False,[1,0,0])
-    createControl('L_Arm_CTRL',3,False,[1,0,0])
-    createControl('R_Foot_CTRL',3,False,[1,0,0])
-    createControl('L_Foot_CTRL',3,False,[1,0,0])
-    mc.parent('C_COG_CTRL','C_Chest_CTRL','C_Head_CTRL','R_Arm_CTRL','L_Arm_CTRL','C_Master_CTRL')
+    createControl('C_Master_CTRL',5,False,[0,1,0])
+    createControl('C_COG_CTRL',4,'C_Pelvis_BIND',[0,1,0])
+    createControl('C_Chest_CTRL',4,'C_upperSpine_BIND',[0,1,0])
+    createControl('C_Head_CTRL',4,'C_Head_BIND',[0,1,0])
+    createControl('R_Arm_CTRL',2,'R_Wrist_BIND',[1,0,0])
+    createControl('L_Arm_CTRL',2,'L_Wrist_BIND',[1,0,0])
+    createControl('R_Foot_CTRL',2,'R_Ankle_BIND',[0,1,0])
+    createControl('L_Foot_CTRL',2,'L_Ankle_BIND',[0,1,0])
+    mc.parent('C_COG_CTRL','C_Chest_CTRL','C_Head_CTRL','R_Arm_CTRL','L_Arm_CTRL','L_Foot_CTRL','R_Foot_CTRL','C_Master_CTRL')
+    mc.parent('C_Chest_CTRL','C_Head_CTRL','C_COG_CTRL')
+    mc.parent('C_Head_CTRL','C_Chest_CTRL')
     mc.select(cl= True)
     createIKs()
+    mc.select(cl=True)
+    
+    #Reverse Foot
+    revFoot('L')
+    revFoot('R')
+    #Group controls
+    mc.group('L_Arm_IK','R_Arm_IK','L_Foot_IK','R_Foot_IK', n='IK_Handles')
+    mc.group('C_Master_CTRL','R_Foot_CTRL','L_Foot_CTRL', n='Controls')
+    mc.group('L_ReverseFootBall_BIND','L_ReverseFootToes_BIND','L_ReverseFootAnkle_BIND','L_ReverseFootHeel_BIND','R_ReverseFootBall_BIND','R_ReverseFootToes_BIND','R_ReverseFootAnkle_BIND','R_ReverseFootHeel_BIND', n='ReverseFoot')
+    mc.group('C_Pelvis_BIND','ReverseFoot', n='Joints')
+    mc.group('IK_Handles','Controls','Joints', n='Character_Rig')
+    
+    #parent controls
+    mc.parentConstraint('L_Arm_CTRL','L_Arm_IK')
+    mc.parentConstraint('R_Arm_CTRL','R_Arm_IK')
+    mc.parentConstraint('L_Foot_CTRL','L_Foot_IK')
+    mc.parentConstraint('R_Foot_CTRL','R_Foot_IK')
+    mc.parentConstraint('C_COG_CTRL','C_Pelvis_BIND')
+    mc.parentConstraint('C_Chest_CTRL','C_Chest_BIND')
+    mc.parentConstraint('C_Head_CTRL','C_Head_BIND')
+    
+   
+    
     
 def createIKs():
-    mc.ikHandle(sj='R_Shoulder_BIND', ee='R_Wrist_BIND',p=2,w=.5)
-    mc.ikHandle(sj='L_Shoulder_BIND', ee='L_Wrist_BIND',p=2,w=.5)
-    mc.ikHandle(sj='R_Hip_BIND', ee='R_Ankle_BIND',p=2,w=.5)
-    mc.ikHandle(sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
+    mc.ikHandle(n='R_Arm_IK',sj='R_Shoulder_BIND', ee='R_Wrist_BIND',p=2,w=.5)
+    mc.ikHandle(n='L_Arm_IK',sj='L_Shoulder_BIND', ee='L_Wrist_BIND',p=2,w=.5)
+    mc.ikHandle(n='R_Foot_IK',sj='R_Hip_BIND', ee='R_Ankle_BIND',p=2,w=.5)
+    mc.ikHandle(n='L_Foot_IK',sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
+    
+def revFoot(side):
+    #REVERSE FOOT
+    mc.joint(n=side+'_ReverseFootBall_BIND')
+    mc.joint(n=side+'_ReverseFootToes_BIND')
+    mc.joint(n=side+'_ReverseFootAnkle_BIND')
+    mc.joint(n=side+'_ReverseFootHeel_BIND')
+        
+    mc.parent(side+'_ReverseFootAnkle_BIND',side+'_Ankle_BIND')
+    mc.parent(side+'_ReverseFootHeel_BIND',side+'_Ankle_BIND')
+    mc.parent(side+'_ReverseFootToes_BIND',side+'_Toes_BIND')
+    mc.parent(side+'_ReverseFootBall_BIND',side+'_Ball_BIND')
+    
+    #Ankle
+    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.tz',0)
+    mc.select(cl=True)
+    mc.parent(side+'_ReverseFootAnkle_BIND',w=True)
+    
+    #Ball
+    mc.setAttr(side+'_ReverseFootBall_BIND'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootBall_BIND'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootBall_BIND'+'.tz',0)
+    mc.select(cl=True)
+    mc.parent(side+'_ReverseFootBall_BIND',w=True)
+    
+    #Toes
+    mc.setAttr(side+'_ReverseFootToes_BIND'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootToes_BIND'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootToes_BIND'+'.tz',0)
+    mc.select(cl=True)
+    mc.parent(side+'_ReverseFootToes_BIND',w=True)
+    
+    #Heel
+    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.tz',0)
+    mc.select(cl=True)
+    mc.parent(side+'_ReverseFootHeel_BIND',w=True)
+    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.ty',0)
+    
+   # A->B
+    #B->T
+    #T->H
+    
+    #Parent
+    mc.parent(side+'_ReverseFootAnkle_BIND',side+'_ReverseFootBall_BIND')
+    mc.parent(side+'_ReverseFootBall_BIND',side+'_ReverseFootToes_BIND')
+    mc.parent(side+'_ReverseFootToes_BIND',side+'_ReverseFootHeel_BIND')
+    
+    
+    
 
 #create all the joints
 def makeJoints():
@@ -77,6 +153,7 @@ def makeJoints():
     jointCreator('Ankle',[2,1,-0],'BIND','L')
     jointCreator('Ball',[2,0,0],'BIND','L')
     jointCreator('Toes',[2,0,1],'BIND','L')
+   
     
     #TORSO
     jointCreator('Pelvis',[0,6.5,-2],'BIND','C')
@@ -140,7 +217,7 @@ def createRig():
     mc.parent('L_IndexC_BIND','L_IndexB_BIND','L_IndexA_BIND')
     
    
-    mc.parent('C_upperSpine_BIND','L_Clavicle_BIND')
+    mc.parent('C_upperSpine_BIND','C_Chest_BIND')
     
     mc.parent('C_lowerNeck_BIND','C_upperSpine_BIND')
    
