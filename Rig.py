@@ -71,10 +71,11 @@ def createRigControl():
     
     
     
+    
     #Group controls
     mc.group('L_Arm_IK','R_Arm_IK','L_Toes_IK','R_Toes_IK','L_Ankle_IK','R_Ankle_IK', n='IK_Handles')
     mc.group('C_Master_CTRL','R_Foot_CTRL','L_Foot_CTRL', n='Controls')
-    mc.group('L_ReverseFootBall_BIND','L_ReverseFootToes_BIND','L_ReverseFootAnkle_BIND','L_ReverseFootHeel_BIND','R_ReverseFootBall_BIND','R_ReverseFootToes_BIND','R_ReverseFootAnkle_BIND','R_ReverseFootHeel_BIND', n='ReverseFoot')
+    mc.group('L_ReverseFootBall','L_ReverseFootToes','L_ReverseFootAnkle','L_ReverseFootHeel','R_ReverseFootBall','R_ReverseFootToes','R_ReverseFootAnkle','R_ReverseFootHeel', n='ReverseFoot')
     mc.group('C_Pelvis_BIND','ReverseFoot', n='Joints')
     mc.group('IK_Handles','Controls','Joints', n='Character_Rig')
     
@@ -83,15 +84,124 @@ def createRigControl():
     mc.orientConstraint('L_Arm_CTRL','L_Wrist_BIND')
     mc.parentConstraint('R_Arm_CTRL','R_Arm_IK')
     mc.orientConstraint('R_Arm_CTRL','R_Wrist_BIND', mo=True)
-    mc.parentConstraint('L_Foot_CTRL','L_Foot_IK')
-    mc.parentConstraint('R_Foot_CTRL','R_Foot_IK')
+    mc.parentConstraint('L_Foot_CTRL','L_ReverseFootHeel', mo = True)
+    mc.parentConstraint('R_Foot_CTRL','R_ReverseFootHeel', mo = True)
     mc.parentConstraint('C_COG_CTRL','C_Pelvis_BIND')
     mc.parentConstraint('C_Chest_CTRL','C_Chest_BIND')
-    mc.parentConstraint('C_Head_CTRL','C_Head_BIND', mo=True)
+    mc.orientConstraint('C_Head_CTRL','C_Head_BIND', mo=True)
     
-   
+    sdk()
+    
+def sdk():
+    mc.addAttr('L_Arm_CTRL', k = True, shortName='ic', longName='indexCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('L_Arm_CTRL', k = True, shortName='rc', longName='ringCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)    
+    mc.addAttr('L_Arm_CTRL', k = True, shortName='mc', longName='middleCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('L_Arm_CTRL', k = True, shortName='pc', longName='pinkieCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('L_Arm_CTRL', k = True, shortName='tc', longName='thumbCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    
+    mc.addAttr('R_Arm_CTRL', k = True, shortName='ic', longName='indexCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('R_Arm_CTRL', k = True, shortName='rc', longName='ringCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)    
+    mc.addAttr('R_Arm_CTRL', k = True, shortName='mc', longName='middleCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('R_Arm_CTRL', k = True, shortName='pc', longName='pinkieCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    mc.addAttr('R_Arm_CTRL', k = True, shortName='tc', longName='thumbCurl', defaultValue=0.0, minValue= -10.0, maxValue=10.0)
+    
+    #Setting Keys for index finger
+    mc.setDrivenKeyframe('L_IndexA_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    mc.setDrivenKeyframe('L_IndexB_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    mc.setAttr('L_Arm_CTRL.indexCurl',10)
+    mc.setAttr('L_IndexA_BIND.rz',77)
+    mc.setAttr('L_IndexB_BIND.rz',77)
+    mc.setDrivenKeyframe('L_IndexA_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    mc.setDrivenKeyframe('L_IndexB_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    mc.setAttr('L_Arm_CTRL.indexCurl',-10)
+    mc.setAttr('L_IndexA_BIND.rz',-80)
+    mc.setAttr('L_IndexB_BIND.rz',-80)
+    mc.setDrivenKeyframe('L_IndexA_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    mc.setDrivenKeyframe('L_IndexB_BIND.rz', cd='L_Arm_CTRL.indexCurl')
+    
+    #reset
+    mc.setAttr('L_Arm_CTRL.indexCurl',0)
     
     
+    #Setting Keys for ring finger
+    mc.setDrivenKeyframe('L_RingA_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    mc.setDrivenKeyframe('L_RingB_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    mc.setAttr('L_Arm_CTRL.ringCurl',10)
+    mc.setAttr('L_RingA_BIND.rz',77)
+    mc.setAttr('L_RingB_BIND.rz',77)
+    mc.setDrivenKeyframe('L_RingA_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    mc.setDrivenKeyframe('L_RingB_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    mc.setAttr('L_Arm_CTRL.ringCurl',-10)
+    mc.setAttr('L_RingA_BIND.rz',-80)
+    mc.setAttr('L_RingB_BIND.rz',-80)
+    mc.setDrivenKeyframe('L_RingA_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    mc.setDrivenKeyframe('L_RingB_BIND.rz', cd='L_Arm_CTRL.ringCurl')
+    
+    #reset
+    mc.setAttr('L_Arm_CTRL.ringCurl',0)
+    
+    #Setting Keys for middle finger
+    mc.setDrivenKeyframe('L_MiddleA_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    mc.setDrivenKeyframe('L_MiddleB_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    mc.setAttr('L_Arm_CTRL.middleCurl',10)
+    mc.setAttr('L_MiddleA_BIND.rz',77)
+    mc.setAttr('L_MiddleB_BIND.rz',77)
+    mc.setDrivenKeyframe('L_MiddleA_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    mc.setDrivenKeyframe('L_MiddleB_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    mc.setAttr('L_Arm_CTRL.middleCurl',-10)
+    mc.setAttr('L_MiddleA_BIND.rz',-80)
+    mc.setAttr('L_MiddleB_BIND.rz',-80)
+    mc.setDrivenKeyframe('L_MiddleA_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    mc.setDrivenKeyframe('L_MiddleB_BIND.rz', cd='L_Arm_CTRL.middleCurl')
+    
+    #reset
+    mc.setAttr('L_Arm_CTRL.middleCurl',0)
+    
+    #Setting Keys for pinkie finger
+    mc.setDrivenKeyframe('L_PinkieA_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    mc.setDrivenKeyframe('L_PinkieB_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    mc.setAttr('L_Arm_CTRL.pinkieCurl',10)
+    mc.setAttr('L_PinkieA_BIND.rz',77)
+    mc.setAttr('L_PinkieB_BIND.rz',77)
+    mc.setDrivenKeyframe('L_PinkieA_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    mc.setDrivenKeyframe('L_PinkieB_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    mc.setAttr('L_Arm_CTRL.pinkieCurl',-10)
+    mc.setAttr('L_PinkieA_BIND.rz',-80)
+    mc.setAttr('L_PinkieB_BIND.rz',-80)
+    mc.setDrivenKeyframe('L_PinkieA_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    mc.setDrivenKeyframe('L_PinkieB_BIND.rz', cd='L_Arm_CTRL.pinkieCurl')
+    
+    #reset
+    mc.setAttr('L_Arm_CTRL.pinkieCurl',0)
+    
+    #Setting Keys for thumb
+    mc.setDrivenKeyframe('L_ThumbA_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    mc.setDrivenKeyframe('L_ThumbB_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    mc.setAttr('L_Arm_CTRL.thumbCurl',10)
+    mc.setAttr('L_ThumbA_BIND.rz',77)
+    mc.setAttr('L_ThumbB_BIND.rz',77)
+    mc.setDrivenKeyframe('L_ThumbA_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    mc.setDrivenKeyframe('L_ThumbB_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    mc.setAttr('L_Arm_CTRL.thumbCurl',-10)
+    mc.setAttr('L_ThumbA_BIND.rz',-80)
+    mc.setAttr('L_ThumbB_BIND.rz',-80)
+    mc.setDrivenKeyframe('L_ThumbA_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    mc.setDrivenKeyframe('L_ThumbB_BIND.rz', cd='L_Arm_CTRL.thumbCurl')
+    
+    #reset
+    mc.setAttr('L_Arm_CTRL.thumbCurl',0)
+    
+    
+    
+    mc.addAttr('L_Foot_CTRL', k = True, shortName='fr',longName='footRoll', defaultValue=0.0,minValue=0.0,maxValue=10.0)
+    mc.addAttr('R_Foot_CTRL', k = True, shortName='fr',longName='footRoll', defaultValue=0.0,minValue=0.0,maxValue=10.0)
+
+
+    mc.addAttr('L_Foot_CTRL', k = True, shortName='tp',longName='toePivot', defaultValue=0.0,minValue=-10.0,maxValue=10.0)
+    mc.addAttr('R_Foot_CTRL', k = True, shortName='tp',longName='toePivot', defaultValue=0.0,minValue=-10.0,maxValue=10.0)     
+    
+    
+    ##mc.setDrivenKeyframe('L_ReverseFootToes
 def createIKs():
     
     
@@ -103,65 +213,67 @@ def createIKs():
     
     mc.ikHandle(n='L_Ankle_IK',sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
     mc.ikHandle(n='R_Ankle_IK',sj='R_Hip_BIND', ee='R_Ankle_BIND',p=2,w=.5)
+    
+    mc.ikHandle(n='L_Ball_IK',sj='L_Ankle_BIND', ee='L_Ball_BIND',p=2,w=.5)
+    mc.ikHandle(n='R_Ball_IK',sj='R_Ankle_ BIND', ee='R_Ball_BIND',p=2,w=.5)
     mc.ikHandle(n='L_Toes_IK',sj='L_Ball_BIND', ee='L_Toes_BIND',p=2,w=.5)
     mc.ikHandle(n='R_Toes_IK',sj='R_Ball_BIND', ee='R_Toes_BIND',p=2,w=.5)
-    mc.ikHandle(n='L_Ankle_IK',sj='L_Toes_BIND', ee='L_Ball_BIND',p=2,w=.5)
-    mc.ikHandle(n='R_Ankle_IK',sj='R_Toes_ BIND', ee='R_Ball_BIND',p=2,w=.5)
+    
     
 def revFoot(side):
     #REVERSE FOOT
-    mc.joint(n=side+'_ReverseFootBall_BIND')
-    mc.joint(n=side+'_ReverseFootToes_BIND')
-    mc.joint(n=side+'_ReverseFootAnkle_BIND')
-    mc.joint(n=side+'_ReverseFootHeel_BIND')
+    mc.joint(n=side+'_ReverseFootBall')
+    mc.joint(n=side+'_ReverseFootToes')
+    mc.joint(n=side+'_ReverseFootAnkle')
+    mc.joint(n=side+'_ReverseFootHeel')
         
-    mc.parent(side+'_ReverseFootAnkle_BIND',side+'_Ankle_BIND')
-    mc.parent(side+'_ReverseFootHeel_BIND',side+'_Ankle_BIND')
-    mc.parent(side+'_ReverseFootToes_BIND',side+'_Toes_BIND')
-    mc.parent(side+'_ReverseFootBall_BIND',side+'_Ball_BIND')
+    mc.parent(side+'_ReverseFootAnkle',side+'_Ankle_BIND')
+    mc.parent(side+'_ReverseFootHeel',side+'_Ankle_BIND')
+    mc.parent(side+'_ReverseFootToes',side+'_Toes_BIND')
+    mc.parent(side+'_ReverseFootBall',side+'_Ball_BIND')
     
     #Ankle
-    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.tx',0)
-    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.ty',0)
-    mc.setAttr(side+'_ReverseFootAnkle_BIND'+'.tz',0)
+    mc.setAttr(side+'_ReverseFootAnkle'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootAnkle'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootAnkle'+'.tz',0)
     mc.select(cl=True)
-    mc.parent(side+'_ReverseFootAnkle_BIND',w=True)
+    mc.parent(side+'_ReverseFootAnkle',w=True)
     
     #Ball
     
-    mc.setAttr(side+'_ReverseFootBall_BIND'+'.tx',0)
-    mc.setAttr(side+'_ReverseFootBall_BIND'+'.ty',0)
-    mc.setAttr(side+'_ReverseFootBall_BIND'+'.tz',0)
+    mc.setAttr(side+'_ReverseFootBall'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootBall'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootBall'+'.tz',0)
     mc.select(cl=True)
-    mc.parent(side+'_ReverseFootBall_BIND',w=True)
+    mc.parent(side+'_ReverseFootBall',w=True)
     
     #Toes
-    mc.setAttr(side+'_ReverseFootToes_BIND'+'.tx',0)
-    mc.setAttr(side+'_ReverseFootToes_BIND'+'.ty',0)
-    mc.setAttr(side+'_ReverseFootToes_BIND'+'.tz',0)
+    mc.setAttr(side+'_ReverseFootToes'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootToes'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootToes'+'.tz',0)
     mc.select(cl=True)
-    mc.parent(side+'_ReverseFootToes_BIND',w=True)
+    mc.parent(side+'_ReverseFootToes',w=True)
     
     #Heel
-    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.tx',0)
-    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.ty',0)
-    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.tz',0)
+    mc.setAttr(side+'_ReverseFootHeel'+'.tx',0)
+    mc.setAttr(side+'_ReverseFootHeel'+'.ty',0)
+    mc.setAttr(side+'_ReverseFootHeel'+'.tz',0)
     mc.select(cl=True)
-    mc.parent(side+'_ReverseFootHeel_BIND',w=True)
-    mc.setAttr(side+'_ReverseFootHeel_BIND'+'.ty',0)
+    mc.parent(side+'_ReverseFootHeel',w=True)
+    mc.setAttr(side+'_ReverseFootHeel'+'.ty',0)
     
    # A->B
     #B->T
     #T->H
     
     #Parent
-   # mc.parent(side+'_Ankle_IK',side+'_ReverseFootBall_BIND')
-   # mc.parent(side+'_Ball_IK',side+'_ReverseFootToes_BIND')
-   # mc.parent(side+'_Toes_IK',side+'_ReverseFootHeel_BIND')
+   # mc.parent(side+'_Ankle_IK',side+'_ReverseFootBall')
+   # mc.parent(side+'_Ball_IK',side+'_ReverseFootToes')
+   # mc.parent(side+'_Toes_IK',side+'_ReverseFootHeel')
     
-    mc.parent(side+'_ReverseFootAnkle_BIND',side+'_ReverseFootBall_BIND')
-    mc.parent(side+'_ReverseFootBall_BIND',side+'_ReverseFootToes_BIND')
-    mc.parent(side+'_ReverseFootToes_BIND',side+'_ReverseFootHeel_BIND')
+    mc.parent(side+'_ReverseFootAnkle',side+'_ReverseFootBall')
+    mc.parent(side+'_ReverseFootBall',side+'_ReverseFootToes')
+    mc.parent(side+'_ReverseFootToes',side+'_ReverseFootHeel')
     
     
    
@@ -237,6 +349,12 @@ def createRig():
     mc.parent('L_MiddleC_BIND','L_MiddleB_BIND','L_MiddleA_BIND')
     mc.parent('L_RingC_BIND','L_RingB_BIND','L_RingA_BIND')
     mc.parent('L_IndexC_BIND','L_IndexB_BIND','L_IndexA_BIND')
+    
+    mc.parent('L_ThumbC_BIND','L_ThumbB_BIND')
+    mc.parent('L_PinkieC_BIND','L_PinkieB_BIND')
+    mc.parent('L_MiddleC_BIND','L_MiddleB_BIND')
+    mc.parent('L_RingC_BIND','L_RingB_BIND')
+    mc.parent('L_IndexC_BIND','L_IndexB_BIND')
     
    
     mc.parent('C_upperSpine_BIND','C_Chest_BIND')
