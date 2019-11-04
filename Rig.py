@@ -73,7 +73,7 @@ def createRigControl():
     
     
     #Group controls
-    mc.group('L_Arm_IK','R_Arm_IK','L_Toes_IK','R_Toes_IK','L_Ankle_IK','R_Ankle_IK', n='IK_Handles')
+    mc.group('L_Arm_IK','L_Ball_IK','R_Ball_IK','L_Foot_IK','R_Foot_IK','R_Arm_IK','L_Toes_IK','R_Toes_IK','L_Ankle_IK','R_Ankle_IK', n='IK_Handles')
     mc.group('C_Master_CTRL','R_Foot_CTRL','L_Foot_CTRL', n='Controls')
     mc.group('L_ReverseFootBall','L_ReverseFootToes','L_ReverseFootAnkle','L_ReverseFootHeel','R_ReverseFootBall','R_ReverseFootToes','R_ReverseFootAnkle','R_ReverseFootHeel', n='ReverseFoot')
     mc.group('C_Pelvis_BIND','ReverseFoot', n='Joints')
@@ -84,8 +84,8 @@ def createRigControl():
     mc.orientConstraint('L_Arm_CTRL','L_Wrist_BIND')
     mc.parentConstraint('R_Arm_CTRL','R_Arm_IK')
     mc.orientConstraint('R_Arm_CTRL','R_Wrist_BIND', mo=True)
-    mc.parentConstraint('L_Foot_CTRL','L_ReverseFootHeel', mo = True)
-    mc.parentConstraint('R_Foot_CTRL','R_ReverseFootHeel', mo = True)
+    mc.parentConstraint('L_Foot_CTRL','L_Foot_IK', mo = True)
+    mc.parentConstraint('R_Foot_CTRL','R_Foot_IK', mo = True)
     mc.parentConstraint('C_COG_CTRL','C_Pelvis_BIND')
     mc.parentConstraint('C_Chest_CTRL','C_Chest_BIND')
     mc.orientConstraint('C_Head_CTRL','C_Head_BIND', mo=True)
@@ -207,8 +207,8 @@ def createIKs():
     
     mc.ikHandle(n='R_Arm_IK',sj='R_Shoulder_BIND', ee='R_Wrist_BIND',p=2,w=.5)
     mc.ikHandle(n='L_Arm_IK',sj='L_Shoulder_BIND', ee='L_Wrist_BIND',p=2,w=.5)
-  #  mc.ikHandle(n='R_Foot_IK',sj='R_Hip_BIND', ee='R_Ankle_BIND',p=2,w=.5)
-  #  mc.ikHandle(n='L_Foot_IK',sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
+    mc.ikHandle(n='R_Foot_IK',sj='R_Hip_BIND', ee='R_Ankle_BIND',p=2,w=.5)
+    mc.ikHandle(n='L_Foot_IK',sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
     
     
     mc.ikHandle(n='L_Ankle_IK',sj='L_Hip_BIND', ee='L_Ankle_BIND',p=2,w=.5)
@@ -370,6 +370,13 @@ def createRig():
     
     createRigControl()
 
+def bindRig():
+    sel=mc.ls(sl=True)
+    mc.select('*_BIND')
+    jntSel=mc.ls(sl=True)
+    mc.skinCluster(jntSel, sel)
+    mc.group(sel,n='GEO')
+    mc.parent('GEO','Character_Rig')
 
 #ui
 def UI():
@@ -394,5 +401,7 @@ def UI():
     mc.button( l = 'Mirror and Rig', c='createRig()')
     mc.text(label='__________________________')
     mc.text(label='')
+    mc.button( l = 'Select char and Bind!', c='bindRig()')
+    
     mc.showWindow()
 UI()
