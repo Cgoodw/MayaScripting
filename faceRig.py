@@ -1,5 +1,5 @@
 import maya.cmds as mc
-
+import os
 #UI
 def UI():
     if mc.window('rigUI',exists=True):
@@ -9,17 +9,20 @@ def UI():
     mc.text(label='')
     mc.button( l = 'Create Default Joints', c='makeJoints()')
     mc.text(label='')
+    mc.text(label='Place Joints on Head')
     mc.text(label='')
     mc.text(label='')
-    #mc.button( l = 'Create Controls', c='makeJoints()')
+    mc.button( l = 'Rig and Create Controls', c='makeControls()')
     mc.text(label='')
     mc.text(label='')
+    mc.button( l = 'Import Blend Shapes', c='importBlendShapes()')
+    
     mc.showWindow()
 UI()
 
     #create the joints
 def makeJoints():
-    #Create Neck
+     #Create Neck
     mc.joint( n = 'lowerNeck_JNT', p= (0,1,-1))
     mc.joint( n = 'upperNeck_JNT', p=(0,5,-0.5))
     
@@ -39,19 +42,21 @@ def makeJoints():
     #top head joint
     mc.joint( n = 'Head_JNT', p=(0,10,-1))
     mc.parent('Head_JNT','upperNeck_JNT')
+
     
+def makeControls():
+    #create the controls
     createControl('BaseCTRL',5,'lowerNeck_JNT',[0,1,0])
-    mc.parent('lowerNeck_JNT','BaseCTRL')
-    
     createControl('HeadCTRL',10,'Head_JNT',[0,1,0])
-    mc.parent('Head_JNT','HeadCTRL')
-    
-    createControl('NeckCTRL',10,'upperNeck_JNT',[0,1,0])
-    mc.parent('upperNeck_JNT','NeckCTRL')
-    
+    createControl('NeckCTRL',10,'upperNeck_JNT',[0,1,0])    
     mc.parent('HeadCTRL','NeckCTRL','BaseCTRL')
+    mc.parent('upperNeck_JNT','lowerNeck_JNT')
+
     
-    #creating the circle controls
+    
+    
+    
+    #function to make the circle controls
 def createControl(ctrlName, size, jointName, alignment):
     
     #create circle
@@ -76,4 +81,13 @@ def createControl(ctrlName, size, jointName, alignment):
         mc.setAttr(ctrlName+'.ry',0)
         mc.setAttr(ctrlName+'.rz',0)
         mc.parent(ctrlName,w=True)
+        mc.parent(jointName,ctrlName)
     mc.makeIdentity(apply=True,t=True,r=True,s=True)
+    
+    
+def importBlendShapes():
+    path=mc.workspace(q=True,rd=True)
+    path=path+('scenes/blendShapes/')
+    print path
+    fileList=os.listdir(path)
+    
