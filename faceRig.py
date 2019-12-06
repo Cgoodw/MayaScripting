@@ -7,6 +7,10 @@ def UI():
     mc.window('rigUI')
     mc.columnLayout()
     mc.text(label='')
+    
+    mc.text( label='Name' )
+    name = mc.textField()
+    
     mc.button( l = 'Create Default Joints', c='makeJoints()')
     mc.text(label='')
     mc.text(label='Place Joints on Head')
@@ -16,7 +20,6 @@ def UI():
     mc.text(label='')
     mc.text(label='')
     mc.button( l = 'Import Blend Shapes', c='importBlendShapes()')
-    
     mc.showWindow()
 UI()
 
@@ -45,16 +48,44 @@ def makeJoints():
 
     
 def makeControls():
+    charName=mc.textField('name',q=True,tx=True)
+    sel=mc.ls(sl=True)
+    sel=sel[0]
+    mc.select(cl=True)
+    
     #create the controls
     createControl('BaseCTRL',5,'lowerNeck_JNT',[0,1,0])
     createControl('HeadCTRL',10,'Head_JNT',[0,1,0])
     createControl('NeckCTRL',10,'upperNeck_JNT',[0,1,0])    
     mc.parent('HeadCTRL','NeckCTRL','BaseCTRL')
     mc.parent('upperNeck_JNT','lowerNeck_JNT')
+    createFaceCTRLS(charName)
+    importBlendShapes(sel,charName)
+    sdks(charName)
 
+def createBoxControl(ctrlName):
+    mc.curve(d=1,p=[[-1,1,0],[1,1,0],[1,-1,0],[-1,1,0]],n=ctrlName+'_limitBox')
+    
+    
+def createFaceCTRLS(charName):
+    createBoxControl('L_Brow_CTRL_'+charName)
+    createBoxControl('R_Brow_CTRL_'+charName)
     
     
     
+def sdks(charName):
+    LorR=['L','R']
+    
+    for side in LorR:
+        mc.setAttr(side+'_Eye_CTRL_'+charName+'.tx',0)
+        mc.setDrivenKeyframe(side+'_eyeBall_GEO.ry',cd=side+'_Eye_CTRL_'+charName+'.tx')
+        mc.setAttr(side+'_Eye_CTRL_'+charName+'.tx',1)
+        mc.setAttr(side+'_eyeBall_GEO.ry',90)
+        mc.setDrivenKeyframe(side+'_eyeBall_GEO.ry',cd=side+'_Eye_CTRL_'+charName+'.tx')
+        mc.setAttr(side+'_Eye_CTRL_'+charName+'.tx',-1)
+        mc.setAttr(side+'_eyeBall_GEO.ry',-90)
+        mc.setDrivenKeyframe(side+'_eyeBall_GEO.ry',cd=side+'_Eye_CTRL_'+charName+'.tx')
+        mc.setAttr(side+'_Eye_CTRL_'+charName+'.tx',0)    
     
     #function to make the circle controls
 def createControl(ctrlName, size, jointName, alignment):
@@ -82,8 +113,7 @@ def createControl(ctrlName, size, jointName, alignment):
         mc.setAttr(ctrlName+'.rz',0)
         mc.parent(ctrlName,w=True)
         mc.parent(jointName,ctrlName)
-    mc.makeIdentity(apply=True,t=True,r=True,s=True)
-    
+    mc.makeIdentity(apply=True,t=True,r=True,s=True)    
     
 def importBlendShapes():
     path=mc.workspace(q=True,rd=True)
